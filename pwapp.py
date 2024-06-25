@@ -9,11 +9,16 @@ if "totalPulledCount" not in st.session_state:
 gachapool = ["cat","dog","sheep","bird","hamster","guinea pig","snake","gecko","chinchilla","rabbit","fish","turtle"]
 gachaLen = len(gachapool)
 limited = "qi"
+standard = "not qi"
 
 def gacha_pull():
     if random.randint(1,100) == 100:
+        if random.randint(0,1) == 1:
         gacha_result = limited
-        st.write("you pulled a " + limited + "!")
+        st.write("you pulled " + limited + "!")
+        else:
+            gacha_result = standard
+            st.write("you pulled " + standard + "!")
     else:
         gacha_result = gachapool[random.randint(0, gachaLen-1)]
     st.session_state.totalPulledCount += 1
