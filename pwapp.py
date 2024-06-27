@@ -52,14 +52,14 @@ max_pity = 80
 def gacha_pull():
     if st.session_state.hard_pity < max_pity: # normal pull, not hard pity
         if random.randint(1,100) == 100: # 1% chance of pulling a rare
-            gacha_result = random.choice(standard, limited) # 50/50 between standard and limited
+            gacha_result = random.choice([standard, limited]) # 50/50 between standard and limited
             col2.write("you pulled " + gacha_result + " at " + str(st.session_state.hard_pity) + " pity!") # display congratulatory message
             st.session_state.hard_pity = 0 # resets hard pity
         else: # normal pull, no rare
             gacha_result = gachapool[random.randint(0, gachaLen-1)] # picks between non-rare list
             st.session_state.hard_pity += 1 
     else: # hard pity reached
-        gacha_result = random.choice(standard, limited) # 50/50 between standard and limited
+        gacha_result = random.choice([standard, limited]) # 50/50 between standard and limited
         col2.write("you pulled " + gacha_result + " at max pity, which is " + str(max_pity))
         st.session_state.hard_pity = 0 
     st.session_state.totalPulledCount += 1
