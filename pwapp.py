@@ -1,29 +1,82 @@
 import streamlit as st
 import random
 
+st.title("PW demo app")
+
+
 col1, col2 = st.columns(2)
 
 if "inventory" not in st.session_state:
-    col2.session_state.inventory = []
+    st.session_state.inventory = []
 if "totalPulledCount" not in st.session_state:
-    col2.session_state.totalPulledCount = 0
+    st.session_state.totalPulledCount = 0
+if "hard_pity" not in st.session_state:
+    st.session_state.hard_pity = 0
+
+#col1: data input
+
+# targetScreenTime = float(col1.text_input("target screen time by the end of 4 weeks"))
+# pastScreenTime = float(col1.text_input("actual average screen time from phone for the past week"))
+
+# col1.write("your target is: " + str(targetScreenTime) + " hours")
+# col1.write("for the last week, your screen time was: " + str(pastScreenTime) + " hours")
+
+# col1.html("<hr>", unsafe_allow_html=True) # draws a line
+
+# todayScreenTime = float(col1.text_input("screen time by the end of today"))
+# col1.write("today's screen time: " + str(todayScreenTime))
+# col1.write("past screen time: " + str(pastScreenTime))
+# if todayScreenTime <= pastScreenTime:
+#     col1.write("congrats! your screen time today is under your past screen time.")
+    
+
+#col2: the gacha simulator
+
+col2.header("gacha pull simulator")  
 
 gachapool = ["cat","dog","sheep","bird","hamster","guinea pig","snake","gecko","chinchilla","rabbit","fish","turtle"]
 gachaLen = len(gachapool)
 limited = "qi"
+standard = "not_qi"
+guaranteed_status = 0
+max_pity = 80
+
+
+
+
+
+
+
+
 
 def gacha_pull():
-    if random.randint(1,100) == 100:
-        gacha_result = limited
-        col2.write("you pulled a " + limited + "!")
-    else:
-        gacha_result = gachapool[random.randint(0, gachaLen-1)]
-    col2.session_state.totalPulledCount += 1
-    col2.session_state.inventory.append(gacha_result)
+    if st.session_state.hard_pity < max_pity: # normal pull, not hard pity
+        if random.randint(1,100) == 100: # 1% chance of pulling a rare
+            gacha_result = random.choice(standard, limited) # 50/50 between standard and limited
+            col2.write("you pulled " + gacha_result + " at " + str(st.session_state.hard_pity) + " pity!") # display congratulatory message
+            st.session_state.hard_pity = 0 # resets hard pity
+        else: # normal pull, no rare
+            gacha_result = gachapool[random.randint(0, gachaLen-1)] # picks between non-rare list
+            st.session_state.hard_pity += 1 
+    else: # hard pity reached
+        gacha_result = random.choice(standard, limited) # 50/50 between standard and limited
+        col2.write("you pulled " + gacha_result + " at max pity, which is " + str(max_pity))
+        st.session_state.hard_pity = 0 
+    st.session_state.totalPulledCount += 1
+    st.session_state.inventory.append(gacha_result)
+        
+        
+
+
+
+
+
+
+
 
 def clear_inv():
-    col2.session_state.inventory = []
-    col2.session_state.totalPulledCount = 0
+    st.session_state.inventory = []
+    st.session_state.totalPulledCount = 0
 
 def pull_for_amt(pullAmount):
     for i in range (pullAmount):
@@ -40,23 +93,14 @@ def view_gacha_stats():
     col2.write("total pull count is " + str(st.session_state.totalPulledCount))
     col2.write("individual count:")
     col2.write(categorisedCount)
+    col2.write("pity: " + str(st.session_state.hard_pity))
 
 def check_inv():
     col2.write(st.session_state.inventory)
 
-#interface
-st.title("PW demo app")
-st.header("gacha pull simulator")   
+ 
 
-# targetScreenTime = st.text_input("target screen time by the end of 4 weeks")
-# pastScreenTime = st.text_input("actual average screen time from phone for the past week")
 
-# st.write("your target is: " + targetScreenTime + " hours")
-# st.write("for the last week, your screen time was: " + pastScreenTime + " hours")
-
-col1.write("\n")
-col1.write("\n")
-col1.write("\n")
 
 if col2.button("hide dialogue"):
     #balls
