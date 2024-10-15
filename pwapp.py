@@ -17,38 +17,48 @@ if "grassCount" not in st.session_state:
 
 #col1: data input
 
-targetScreenTime = col1.text_input("target screen time by the end of 4 weeks")
-pastScreenTime = col1.text_input("actual average screen time from phone for the past week")
+# targetScreenTime = col1.text_input("target screen time by the end of 4 weeks")
+# pastScreenTime = col1.text_input("actual average screen time from phone for the past week")
 
-col1.write("your target is: " + str(targetScreenTime) + " hours")
-col1.write("for the last week, your screen time was: " + str(pastScreenTime) + " hours")
+# col1.write("your target is: " + str(targetScreenTime) + " hours")
+# col1.write("for the last week, your screen time was: " + str(pastScreenTime) + " hours")
 
-col1.html("<hr>") # draws a line
+# col1.html("<hr>") # draws a line
 
-todayScreenTime = col1.text_input("screen time by the end of today")
-col1.write("today's screen time: " + str(todayScreenTime))
-col1.write("past screen time: " + str(pastScreenTime))
+# todayScreenTime = col1.text_input("screen time by the end of today")
+# col1.write("today's screen time: " + str(todayScreenTime))
+# col1.write("past screen time: " + str(pastScreenTime))
 
-if col1.button("tabulate grass"):
-    # if todayScreenTime is lower than pastScreenTime, earn that much grass. otherwise grass remains the same
-    if pastScreenTime and todayScreenTime:
-        todayScreenTime, pastScreenTime = int(todayScreenTime), int(pastScreenTime)
-        if todayScreenTime <= pastScreenTime:
-            col1.write("congrats! your screen time today is under your past screen time.")
-            st.session_state.grassCount += (pastScreenTime - todayScreenTime)
-            col1.write("you now have " + str(st.session_state.grassCount) + " grass!")
-        elif todayScreenTime > pastScreenTime:
-            col1.write("please do better... ")
+# if col1.button("tabulate grass"):
+#     # if todayScreenTime is lower than pastScreenTime, earn that much grass. otherwise grass remains the same
+#     if pastScreenTime and todayScreenTime:
+#         todayScreenTime, pastScreenTime = int(todayScreenTime), int(pastScreenTime)
+#         if todayScreenTime <= pastScreenTime:
+#             col1.write("congrats! your screen time today is under your past screen time.")
+#             st.session_state.grassCount += (pastScreenTime - todayScreenTime)
+#             col1.write("you now have " + str(st.session_state.grassCount) + " grass!")
+#         elif todayScreenTime > pastScreenTime:
+#             col1.write("please do better... ")
 
+if col1.button("1 hour has passed", use_container_width=True): 
+    st.session_state.grassCount += 1
+if col1.button("5 hours have passed", use_container_width=True): 
+    st.session_state.grassCount += 5
+if col1.button("10 hours have passed", use_container_width=True): 
+    st.session_state.grassCount += 10
+if col1.button("15 hours have passed", use_container_width=True): 
+    st.session_state.grassCount += 15
+if col1.button("1 day has passed", use_container_width=True): 
+    st.session_state.grassCount += 24
 
 # col2: the gacha simulator
 
 col2.header("gacha pull simulator")  
 
-gachapool = ["cat","dog","sheep","bird","hamster","guinea pig","snake","gecko","chinchilla","rabbit","fish","turtle"]
+gachapool = ["dragonfly","squirrel","ladybug","sparrow","butterfly","rabbit","dog","bee","caterpillar","ant"]
 gachaLen = len(gachapool)
-limited = "qi"
-standard = "not_qi"
+limited = "[RARE] gnome"
+standard = "[RARE] stickbug"
 guaranteed_status = 0
 max_pity = 80
 grass_per_pull = 1
