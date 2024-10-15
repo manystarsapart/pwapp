@@ -14,6 +14,12 @@ if "hard_pity" not in st.session_state:
     st.session_state.hard_pity = 0
 if "grassCount" not in st.session_state:
     st.session_state.grassCount = 0
+if "daily_hours_off" not in st.session_state:
+    st.session_state.daily_hours_off = 0
+
+def clear_inv():
+    st.session_state.inventory = []
+    st.session_state.totalPulledCount = 0
 
 #col1: data input
 
@@ -40,16 +46,52 @@ if "grassCount" not in st.session_state:
 #         elif todayScreenTime > pastScreenTime:
 #             col1.write("please do better... ")
 
-if col1.button("1 hour has passed", use_container_width=True): 
+if col1.button("1 hour has passed with device off", use_container_width=True): 
     st.session_state.grassCount += 1
-if col1.button("5 hours have passed", use_container_width=True): 
+    st.session_state.daily_hours_off += 1
+if col1.button("5 hours have passed with device off", use_container_width=True): 
     st.session_state.grassCount += 5
-if col1.button("10 hours have passed", use_container_width=True): 
+    st.session_state.daily_hours_off += 5
+if col1.button("10 hours have passed with device off", use_container_width=True): 
     st.session_state.grassCount += 10
-if col1.button("15 hours have passed", use_container_width=True): 
+    st.session_state.daily_hours_off += 10
+if col1.button("15 hours have passed with device off", use_container_width=True): 
     st.session_state.grassCount += 15
-if col1.button("1 day has passed", use_container_width=True): 
+    st.session_state.daily_hours_off += 15
+if col1.button("1 day has passed with device off", use_container_width=True): 
     st.session_state.grassCount += 24
+    st.session_state.daily_hours_off += 24
+
+if col1.button("progress to next day", use_container_width=True):
+    st.session_state.daily_hours_off = 0
+
+# assuming one full day has passed
+if st.session_state.daily_hours_off >= 10 and st.session_state.daily_hours_off <= 24:
+    col1.write("congratulations! you spent " + str(st.session_state.daily_hours_off) + " hours off your device today!")
+elif st.session_state.daily_hours_off < 10:
+    col1.write("you spent " + str(st.session_state.daily_hours_off) + " hours off your device today.")
+elif st.session_state.daily_hours_off > 24:
+    col1.write("error! max 24 hours in a day! total hours input was " + str(st.session_state.daily_hours_off))
+
+
+
+command = col1.chat_input("admin debug command window")
+if command: 
+    if command == "reset all" or command == "reset":
+        st.session_state.grassCount = 0
+        st.session_state.daily_hours_off = 0
+        clear_inv()
+        st.session_state.hard_pity = 0
+    elif command == "reset grass":
+        st.session_state.grassCount = 0
+        st.session_state.daily_hours_off = 0
+    elif command.startswith("give grass"):
+        grasscommand = command.split()
+        final_grass = grasscommand[2] if len(grasscommand) > 2 else None
+        st.session_state.grassCount += int(final_grass)
+    else:
+        col1.write("invalid command")
+
 
 # col2: the gacha simulator
 
@@ -80,9 +122,7 @@ def gacha_pull():
     st.session_state.inventory.append(gacha_result)
   
 
-def clear_inv():
-    st.session_state.inventory = []
-    st.session_state.totalPulledCount = 0
+
 
 def pull_for_amt(pullAmount):
     for i in range (pullAmount):
