@@ -171,6 +171,20 @@ if st.session_state.grassCount >= 1000*grass_per_pull:
         pull_for_amt(1000)
         st.session_state.grassCount -= 1000*grass_per_pull
 
+if st.session_state.grassCount >= 10000*grass_per_pull:
+    if col2.button("pull 10000"):
+        pull_for_amt(10000)
+        st.session_state.grassCount -= 10000*grass_per_pull
+
+if st.session_state.grassCount >= 100000*grass_per_pull:
+    if col2.button("pull 100000"):
+        pull_for_amt(100000)
+        st.session_state.grassCount -= 100000*grass_per_pull
+
+if st.session_state.grassCount >= 1000000*grass_per_pull:
+    if col2.button("pull 1000000"):
+        pull_for_amt(1000000)
+        st.session_state.grassCount -= 1000000*grass_per_pull
 
 col2.write("grass count: " + str(st.session_state.grassCount))
 
